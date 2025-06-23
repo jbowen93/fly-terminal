@@ -53,6 +53,15 @@ topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
 window.addEventListener("phx:page-loading-start", (_info) => topbar.show(300));
 window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
 
+// Clear input field when requested by LiveView
+window.addEventListener("phx:clear-input", (_event) => {
+  const inputField = document.querySelector("#message_content");
+  if (inputField) {
+    inputField.value = "";
+    inputField.focus(); // Keep focus on the input field for continuous typing
+  }
+});
+
 // connect if there are any LiveViews on the page
 liveSocket.connect();
 
