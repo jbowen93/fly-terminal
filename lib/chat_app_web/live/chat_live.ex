@@ -51,6 +51,32 @@ defmodule ChatAppWeb.ChatLive do
   end
 
   @impl true
+  def handle_event("send_message", %{"key" => "Enter", "value" => content}, socket)
+      when content != "" do
+    message_params = %{"content" => content, "username" => socket.assigns.username}
+
+    case Chat.create_message(message_params) do
+      {:ok, message} ->
+        changeset = Chat.change_message(%Message{})
+
+        {:noreply,
+         socket
+         |> assign(:form, to_form(changeset))
+         |> assign(:messages_empty?, false)
+         |> stream_insert(:messages, message, at: -1)}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  @impl true
+  def handle_event("send_message", %{"key" => "Enter", "value" => ""}, socket) do
+    # Ignore empty messages on Enter key press
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("set_username", %{"username" => username}, socket) do
     {:noreply, assign(socket, :username, username)}
   end
