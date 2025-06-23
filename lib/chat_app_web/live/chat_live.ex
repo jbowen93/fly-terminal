@@ -15,7 +15,7 @@ defmodule ChatAppWeb.ChatLive do
 
     {:ok,
      socket
-     |> assign(:form, to_form(changeset))
+     |> assign(:form, to_form(changeset, as: :message))
      |> assign(:username, "guest_#{:rand.uniform(9999)}")
      |> assign(:messages_empty?, messages == [])
      |> stream(:messages, messages)}
@@ -41,9 +41,9 @@ defmodule ChatAppWeb.ChatLive do
 
         {:noreply,
          socket
-         |> assign(:form, to_form(changeset))
+         |> assign(:form, to_form(changeset, as: :message))
          |> assign(:messages_empty?, false)
-         |> stream_insert(:messages, message, at: 0)}
+         |> stream_insert(:messages, message)}
 
       {:error, changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -61,9 +61,9 @@ defmodule ChatAppWeb.ChatLive do
 
         {:noreply,
          socket
-         |> assign(:form, to_form(changeset))
+         |> assign(:form, to_form(changeset, as: :message))
          |> assign(:messages_empty?, false)
-         |> stream_insert(:messages, message, at: 0)}
+         |> stream_insert(:messages, message)}
 
       {:error, changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -86,7 +86,7 @@ defmodule ChatAppWeb.ChatLive do
     {:noreply,
      socket
      |> assign(:messages_empty?, false)
-     |> stream_insert(:messages, message, at: 0)}
+     |> stream_insert(:messages, message)}
   end
 
   defp format_time(datetime) do
