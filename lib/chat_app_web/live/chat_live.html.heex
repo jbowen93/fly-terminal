@@ -1,0 +1,101 @@
+<Layouts.app flash={@flash}>
+  <div class="h-screen bg-black text-green-400 font-mono flex flex-col">
+    <!-- Terminal Header -->
+    <div class="border-b border-green-400 px-4 py-2 text-sm flex-shrink-0">
+      <span class="text-green-300">root@chat:~$</span>
+      live_chat --realtime
+      <span class="float-right text-green-600">
+        Connected as: <span class="text-cyan-400">{@username}</span>
+      </span>
+    </div>
+    
+<!-- ASCII Art Banner -->
+    <div class="px-4 py-3 text-center text-xs leading-tight flex-shrink-0 border-b border-green-700">
+      <pre class="text-green-300">
+ ╔══════════════════════════════════════════════════════════╗
+ ║  ████████ ███████ ██████  ███    ███ ██ ███    ██  █████  ║
+ ║     ██    ██      ██   ██ ████  ████ ██ ████   ██ ██   ██ ║
+ ║     ██    █████   ██████  ██ ████ ██ ██ ██ ██  ██ ███████ ║
+ ║     ██    ██      ██   ██ ██  ██  ██ ██ ██  ██ ██ ██   ██ ║
+ ║     ██    ███████ ██   ██ ██      ██ ██ ██   ████ ██   ██ ║
+ ║                                                          ║
+ ║                  LIVE CHAT v2.0                          ║
+ ╚══════════════════════════════════════════════════════════╝
+</pre>
+      <p class="mt-2 text-green-400 text-xs">
+        [SYSTEM] Real-time messaging active. Type to chat.
+      </p>
+    </div>
+    
+<!-- Messages Container -->
+    <div
+      id="messages-container"
+      class="flex-1 px-4 py-2 overflow-y-auto space-y-1 min-h-0"
+      phx-hook="ScrollToBottom"
+    >
+      <%= if @messages_empty? do %>
+        <div class="text-green-600 text-center mt-8">
+          <span class="text-yellow-400">[SYSTEM]</span> No messages yet. Start the conversation!
+        </div>
+      <% else %>
+        <div id="messages" phx-update="stream" class="space-y-1">
+          <%= for {id, message} <- @streams.messages do %>
+            <div id={id} class="text-green-300">
+              <span class="text-yellow-400">[{format_time(message.inserted_at)}]</span>
+              <span class="text-cyan-400"><%= message.username %></span>:
+              <span class="text-green-400">{message.content}</span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    
+<!-- Input Area -->
+    <div class="border-t border-green-400 px-4 py-3 flex-shrink-0">
+      <.form
+        for={@form}
+        id="chat-form"
+        phx-change="validate"
+        phx-submit="send_message"
+        class="space-y-2"
+      >
+        <div class="flex items-center space-x-2">
+          <span class="text-green-300 text-sm">{@username}@chat:~$</span>
+          <div class="flex-1 relative">
+            <.input
+              field={@form[:content]}
+              type="text"
+              placeholder="Type your message and press ENTER..."
+              class="w-full bg-black text-green-400 font-mono text-sm border border-green-400 rounded px-3 py-2 focus:outline-none focus:border-green-300 focus:ring-1 focus:ring-green-300 placeholder-green-600"
+              error_class="border-red-400 focus:border-red-500 focus:ring focus:ring-red-300"
+              phx-keydown="send_message"
+              phx-key="Enter"
+              autocomplete="off"
+            />
+            <div class="absolute right-2 top-2 text-green-600 text-xs">
+              [READY]
+            </div>
+          </div>
+        </div>
+        
+<!-- Username changer -->
+        <div class="flex items-center space-x-2 text-xs">
+          <span class="text-green-600">Username:</span>
+          <input
+            type="text"
+            value={@username}
+            phx-blur="set_username"
+            phx-value-username={@username}
+            class="bg-black text-cyan-400 font-mono border border-green-700 rounded px-2 py-1 focus:outline-none focus:border-green-500 w-32"
+          />
+          <span class="text-green-600">| Status: Connected | Real-time: Active</span>
+        </div>
+      </.form>
+    </div>
+    
+<!-- Bottom Terminal Line -->
+    <div class="bg-green-400 text-black text-xs px-4 py-1 font-bold flex-shrink-0">
+      TERMINAL CHAT v2.0 | ESC: menu | F1: help | F10: quit | Users Online: Live
+    </div>
+  </div>
+</Layouts.app>
