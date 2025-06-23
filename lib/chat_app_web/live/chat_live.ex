@@ -13,6 +13,9 @@ defmodule ChatAppWeb.ChatLive do
     messages = Chat.list_messages()
     changeset = Chat.change_message(%Message{})
 
+    # Clear the input field
+    socket = push_event(socket, "clear-input", %{})
+
     {:ok,
      socket
      |> assign(:form, to_form(changeset, as: :message))
@@ -39,6 +42,9 @@ defmodule ChatAppWeb.ChatLive do
       {:ok, message} ->
         changeset = Chat.change_message(%Message{})
 
+        # Clear the input field
+        socket = push_event(socket, "clear-input", %{})
+
         {:noreply,
          socket
          |> assign(:form, to_form(changeset, as: :message))
@@ -58,6 +64,9 @@ defmodule ChatAppWeb.ChatLive do
     case Chat.create_message(message_params) do
       {:ok, message} ->
         changeset = Chat.change_message(%Message{})
+
+        # Clear the input field
+        socket = push_event(socket, "clear-input", %{})
 
         {:noreply,
          socket
