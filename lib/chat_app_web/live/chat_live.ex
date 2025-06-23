@@ -43,7 +43,7 @@ defmodule ChatAppWeb.ChatLive do
          socket
          |> assign(:form, to_form(changeset))
          |> assign(:messages_empty?, false)
-         |> stream_insert(:messages, message, at: -1)}
+         |> stream_insert(:messages, message, at: 0)}
 
       {:error, changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -63,7 +63,7 @@ defmodule ChatAppWeb.ChatLive do
          socket
          |> assign(:form, to_form(changeset))
          |> assign(:messages_empty?, false)
-         |> stream_insert(:messages, message, at: -1)}
+         |> stream_insert(:messages, message, at: 0)}
 
       {:error, changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -86,7 +86,7 @@ defmodule ChatAppWeb.ChatLive do
     {:noreply,
      socket
      |> assign(:messages_empty?, false)
-     |> stream_insert(:messages, message, at: -1)}
+     |> stream_insert(:messages, message, at: 0)}
   end
 
   defp format_time(datetime) do
