@@ -68,8 +68,4 @@ defmodule ChatAppWeb.ChatLive do
     |> DateTime.from_naive!("Etc/UTC")
     |> Calendar.strftime("%H:%M:%S")
   end
-
-  defp scroll_to_bottom(js \\ %JS{}) do
-    JS.dispatch(js, "phx:scroll-to-bottom", to: "#messages-container")
-  end
 end
