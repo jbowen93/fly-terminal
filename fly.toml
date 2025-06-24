@@ -53,11 +53,6 @@ console_command = '/app/bin/chat_app remote'
   source = 'chat_app_data'
   destination = '/app/data'
 
-# Environment variables for production
-[env]
-  DATABASE_PATH = '/app/data/chat_app.db'
-  PHX_SERVER = 'true'
-  SECRET_KEY_BASE = ''  # You'll need to set this as a secret
 
 # Secrets that need to be set with `fly secrets set`
 # SECRET_KEY_BASE - generate with: mix phx.gen.secret
