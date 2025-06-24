@@ -12,7 +12,7 @@ defmodule ChatApp.Chat do
   """
   def list_messages do
     Message
-    |> order_by(desc: :inserted_at)
+    |> order_by(asc: :inserted_at)
     |> Repo.all()
   end
 
