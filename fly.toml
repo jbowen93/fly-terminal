@@ -1,0 +1,65 @@
+# fly.toml app configuration file generated for retro-terminal-chat
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'retro-terminal-chat'
+primary_region = 'iad'
+console_command = '/app/bin/chat_app remote'
+
+[build]
+
+[deploy]
+  release_command = '/app/bin/migrate'
+
+[env]
+  PHX_HOST = 'retro-terminal-chat.fly.dev'
+  PORT = '8080'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[http_service.checks]]
+  interval = '10s'
+  timeout = '2s'
+  grace_period = '5s'
+  method = 'GET'
+  path = '/health'
+  protocol = 'http'
+  tls_skip_verify = false
+
+[http_service.concurrency]
+  type = 'connections'
+  hard_limit = 1000
+  soft_limit = 1000
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[[statics]]
+  guest_path = '/app/lib/chat_app-0.1.0/priv/static'
+  url_prefix = '/static/'
+
+# Database configuration for SQLite
+# Since we're using SQLite, we need persistent storage
+[mounts]
+  source = 'chat_app_data'
+  destination = '/app/data'
+
+# Environment variables for production
+[env]
+  DATABASE_PATH = '/app/data/chat_app.db'
+  PHX_SERVER = 'true'
+  SECRET_KEY_BASE = ''  # You'll need to set this as a secret
+
+# Secrets that need to be set with `fly secrets set`
+# SECRET_KEY_BASE - generate with: mix phx.gen.secret
+# DATABASE_URL - will be automatically constructed from DATABASE_PATH
+
