@@ -18,6 +18,9 @@ defmodule ChatAppWeb.Router do
     pipe_through :browser
 
     live "/", ChatLive
+
+    # Health check endpoint for Fly.io
+    get "/health", PageController, :health
   end
 
   # Other scopes may use custom stacks.
