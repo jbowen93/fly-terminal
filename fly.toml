@@ -13,6 +13,7 @@ console_command = '/app/bin/chat_app remote'
   release_command = '/app/bin/migrate'
 
 [env]
+  DATABASE_PATH = '/app/data/chat_app.db'
   PHX_HOST = 'retro-terminal-chat.fly.dev'
   PORT = '8080'
 
